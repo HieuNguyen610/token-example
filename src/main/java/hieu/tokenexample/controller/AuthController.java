@@ -6,10 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import hieu.tokenexample.config.JwtUtils;
-import hieu.tokenexample.dao.JwtResponse;
-import hieu.tokenexample.dao.LoginRequest;
-import hieu.tokenexample.dao.MessageResponse;
-import hieu.tokenexample.dao.SignupRequest;
+import hieu.tokenexample.dao.*;
 import hieu.tokenexample.entity.ERole;
 import hieu.tokenexample.entity.Role;
 import hieu.tokenexample.entity.User;
@@ -58,14 +55,14 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
+        TokenResponse tokenResponse = jwtUtils.generateJwtToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
+        return ResponseEntity.ok(new JwtResponse(tokenResponse.getAccessToken(),
+                tokenResponse.getRefreshToken(),
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
