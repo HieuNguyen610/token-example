@@ -69,6 +69,22 @@ public class AuthController {
                 roles));
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshRequest refreshRequest) {
+        String refreshToken = refreshRequest.getRefreshToken();
+        if (jwtUtils.validateJwtToken(refreshToken)) {
+            String username = jwtUtils.getUserNameFromJwtToken(refreshToken);
+            String newAccessToken = jwtUtils.generateAccessToken(username);
+            return ResponseEntity.ok(TokenResponse.builder()
+                            .accessToken(newAccessToken)
+                            .refreshToken(refreshToken)
+                    .build());
+
+        }
+        return ResponseEntity.status(403).body("Invalid refresh token");
+    }
+
+
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {

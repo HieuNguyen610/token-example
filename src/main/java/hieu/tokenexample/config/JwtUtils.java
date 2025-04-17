@@ -39,7 +39,7 @@ public class JwtUtils {
                 .build();
     }
 
-    private String generateAccessToken(String username) {
+    public String generateAccessToken(String username) {
         String accessToken = Jwts.builder()
                 .setSubject((username))
                 .setIssuedAt(new Date())
@@ -49,7 +49,7 @@ public class JwtUtils {
         return accessToken;
     }
 
-    public String generateRefreshToken(String username) {
+    private String generateRefreshToken(String username) {
         return Jwts.builder()
                 .setSubject((username))
                 .setIssuedAt(new Date())
