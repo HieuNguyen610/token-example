@@ -43,7 +43,7 @@ public class JwtUtils {
         String accessToken = Jwts.builder()
                 .setSubject((username))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .setExpiration(new Date((new Date()).getTime() + ACCESS_TOKEN_VALIDITY))
                 .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
         return accessToken;
